@@ -4,6 +4,9 @@ from django.utils import timezone
 
 from .models import Post
 
+# 글상세
+
+
 # 글목록
 def post_list(request):
     post_queryset = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')

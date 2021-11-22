@@ -1,0 +1,121 @@
+Microsoft Windows [Version 10.0.19042.1288]
+(c) Microsoft Corporation. All rights reserved.
+
+(venv) C:\mypython>python manage.py shell
+Python 3.9.7 (tags/v3.9.7:1016ef3, Aug 30 2021, 20:19:38) [MSC v.1929 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from blog.models import Post
+>>> Post.objects.all()
+<QuerySet [<Post: 장고프레임워크 (1) >, <Post: Django 역사 (2) >, <Post: 파이썬 (3) >]>
+
+>>> from django.contrib.auth.models import User
+>>> User.objects.all()
+<QuerySet [<User: admin>]>
+>>> User.objects.get(username='admin')
+<User: admin>
+
+>>> Post.objects.get(title='파이썬')
+<Post: 파이썬 (3) >
+>>> me = User.objects.get(username='admin')
+>>> me
+<User: admin>
+>>> type(me)
+<class 'django.contrib.auth.models.User'>
+>>> me.username
+'admin'
+>>> me.email
+'aa@aa.com'
+>>> me.password
+'pbkdf2_sha256$216000$kR4q93AHCi6z$RVDAeOCNpEtlR+zR63M+3cbr+o4cX7V8kCwSLFZthcM='
+
+>>> Post.objects.create(author=me, title='sample title', text='sample text')
+<Post: sample title (4) >
+>>> Post.objects.all()
+<QuerySet [<Post: 장고프레임워크 (1) >, <Post: Django 역사 (2) >, <Post: 파이썬 (3) >, <Post: sample title (4) >]>
+
+>>> Post.objects.filter(title__contains='title')
+<QuerySet [<Post: sample title (4) >]>
+>>> post1 = Post.objects.filter(title__contains='title')
+>>> type(post1)
+<class 'django.db.models.query.QuerySet'>
+
+>>> post2 = Post.objects.get(title='파이썬')
+>>> type(post2)
+<class 'blog.models.Post'>
+>>> post1
+<QuerySet [<Post: sample title (4) >]>
+>>> post2
+<Post: 파이썬 (3) >
+>>> posts = Post.objects.all()
+>>> posts
+<QuerySet [<Post: 장고프레임워크 (1) >, <Post: Django 역사 (2) >, <Post: 파이썬 (3) >, <Post: sample title (4) >]>
+>>> for post in posts:
+...     print(post)
+...
+장고프레임워크 (1)
+Django 역사 (2)
+파이썬 (3)
+sample title (4)
+
+>>> for post in posts:
+...     print(post.pk, post.created_date, post.title)
+...
+1 2021-11-22 04:57:08+00:00 장고프레임워크
+2 2021-11-22 04:58:09+00:00 Django 역사
+3 2021-11-22 04:59:12+00:00 파이썬
+4 2021-11-22 06:57:44.689898+00:00 sample title
+
+>>> from django.utils import timezone
+>>> timezone.now()
+datetime.datetime(2021, 11, 22, 7, 16, 6, 208169, tzinfo=<UTC>)
+
+>>> Post.objects.filter(published_date__lte=timezone.now())
+<QuerySet [<Post: Django 역사 (2) >, <Post: 파이썬 (3) >]>
+>>> for post in posts:
+...     print(post.title, post.published_date)
+...
+장고프레임워크 None
+Django 역사 2021-11-22 04:58:47+00:00
+파이썬 2021-11-22 04:59:28+00:00
+sample title None
+
+>>> for post in posts:
+...     print(post.pk, post.title, post.published_date)
+...
+1 장고프레임워크 None
+2 Django 역사 2021-11-22 04:58:47+00:00
+3 파이썬 2021-11-22 04:59:28+00:00
+4 sample title None
+
+>>> post1 = Post.objects.get(pk=1)
+>>> post1.title
+'장고프레임워크'
+>>> post1.published_date
+>>> print(post1.published_date)
+None
+>>> post1.publish()
+>>> print(post1.published_date)
+2021-11-22 07:21:48.967241+00:00
+
+>>> Post.objects.filter(published_date__lte=timezone.now())
+<QuerySet [<Post: 장고프레임워크 (1) >, <Post: Django 역사 (2) >, <Post: 파이썬 (3) >]>
+>>> Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+<QuerySet [<Post: Django 역사 (2) >, <Post: 파이썬 (3) >, <Post: 장고프레임워크 (1) >]>
+>>> Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
+<QuerySet [<Post: 장고프레임워크 (1) >, <Post: 파이썬 (3) >, <Post: Django 역사 (2) >]>
+
+>>> from django.shortcuts import get_object_or_404
+>>> get_object_or_404(Post,pk=1)
+<Post: 장고프레임워크 (1) >
+>>> type(get_object_or_404(Post,pk=1))
+<class 'blog.models.Post'>
+
+>>> delpost = Post.objects.get(title='sample title')
+>>> delpost = get_object_or_404(Post,pk=4)
+>>> delpost
+<Post: sample title (4) >
+>>> delpost.delete()
+(1, {'blog.Post': 1})
+>>> Post.objects.all()
+<QuerySet [<Post: 장고프레임워크 (1) >, <Post: Django 역사 (2) >, <Post: 파이썬 (3) >]>

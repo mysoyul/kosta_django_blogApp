@@ -1,0 +1,14 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    {% for post in posts %}
+        <div class="post">
+            <div class="date"><p>published: {{ post.published_date }}</p>
+            </div>
+            <h1><a href="">{{ post.title }}</a></h1>
+            <p>{{ post.text|linebreaksbr }}</p>
+        </div>
+        {% empty %}
+        요청하신 글(Post)가 존재하지 않습니다.
+    {% endfor %}
+{% endblock %}

@@ -18,10 +18,10 @@ class PostForm(forms.Form):
 class PostModelForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('title', 'text')
+        fields = ('title', 'text',)
 
 # CommentModelForm 클래스선언
 class CommentModelForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ('author', 'text')
+        fields = ('author', 'text',)

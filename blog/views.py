@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -7,12 +8,14 @@ from .forms import PostForm, PostModelForm
 from .models import Post
 
 # 글삭제
+@login_required
 def post_remove(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.delete()
     return redirect('post_list')
 
 # 글수정(PostModelForm사용)
+@login_required
 def post_edit(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if request.method == 'POST':
@@ -30,6 +33,7 @@ def post_edit(request, pk):
     return render(request, 'blog/post_edit.html', {'form':form})
 
 # 글등록 (PostForm 사용)
+@login_required
 def post_new(request):
     if request.method == 'POST':
         form = PostForm(request.POST)

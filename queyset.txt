@@ -173,3 +173,84 @@ Type "help", "copyright", "credits" or "license" for more information.
 2 True
 
 --------------Pagination--------------
+Python 3.9.7 (tags/v3.9.7:1016ef3, Aug 30 2021, 20:19:38) [MSC v.1929 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from django.core.paginator import Paginator
+>>> objects = ['java','boot','jpa','python','django']
+>>> objects
+['java', 'boot', 'jpa', 'python', 'django']
+>>> p = Paginator(objects,2)
+>>> p.count
+5
+>>> p.num_pages
+3
+>>> p.page_range
+range(1, 4)
+>>> for val in p.page_range:
+...     print(val)
+...
+1
+2
+3
+>>> page1 = p.page(1)
+>>> type(page1)
+<class 'django.core.paginator.Page'>
+>>> page1.object_list
+['java', 'boot']
+>>> page1.has_previous()
+False
+>>> page1.has_next()
+True
+>>> page2 = p.page(2)
+>>> page2.object_list
+['jpa', 'python']
+>>> page2.has_previous()
+True
+>>> page2.has_next()
+True
+>>> page3 = p.page(3)
+>>> page3.object_list
+['django']
+>>> page2.has_previous()
+True
+>>> page3.has_previous()
+True
+>>> page3.has_next()
+False
+>>> page1.previous_page_number()
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+  File "C:\mypython\venv\lib\site-packages\django\core\paginator.py", line 170, in previous_page_number
+    return self.paginator.validate_number(self.number - 1)
+  File "C:\mypython\venv\lib\site-packages\django\core\paginator.py", line 50, in validate_number
+    raise EmptyPage(_('That page number is less than 1'))
+django.core.paginator.EmptyPage: 페이지 번호가 1보다 작습니다.
+>>> page1.next_page_number()
+2
+>>> page2.previous_page_number()
+1
+>>> page2.next_page_number()
+3
+>>> page3.previous_page_number()
+2
+>>> page3.next_page_number()
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+  File "C:\mypython\venv\lib\site-packages\django\core\paginator.py", line 167, in next_page_number
+    return self.paginator.validate_number(self.number + 1)
+  File "C:\mypython\venv\lib\site-packages\django\core\paginator.py", line 55, in validate_number
+    raise EmptyPage(_('That page contains no results'))
+django.core.paginator.EmptyPage: 해당 페이지에 결과가 없습니다.
+>>> page1.start_index()
+1
+>>> page1.end_index()
+2
+>>> page2.start_index()
+3
+>>> page2.end_index()
+4
+>>> page3.start_index()
+5
+>>> page3.end_index()
+5

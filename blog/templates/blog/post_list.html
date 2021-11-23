@@ -12,4 +12,6 @@
         {% empty %}
         요청하신 글(Post)가 존재하지 않습니다.
     {% endfor %}
+
+    {% include 'blog/pagination.html' with page=posts %}
 {% endblock %}

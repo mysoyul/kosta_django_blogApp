@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
@@ -111,8 +112,22 @@ def post_detail(request, pk):
 
 # 글목록
 def post_list(request):
+    #post_queryset = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+    #return render(request, 'blog/post_list.html', {'posts': post_queryset} )
+
+    # Paging 처리하기
     post_queryset = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
-    return render(request, 'blog/post_list.html', {'posts': post_queryset} )
+    paginator = Paginator(post_queryset, 2)
+    page_number = request.GET.get('page')
+
+    try:
+        page = paginator.page(page_number)
+    except PageNotAnInteger:
+        page = paginator.page(1)
+    except EmptyPage:
+        page = paginator.page(paginator.num_pages)
+
+    return render(request, 'blog/post_list.html', {'posts': page})
 
 def post_list_first(request):
     name = 'Django'

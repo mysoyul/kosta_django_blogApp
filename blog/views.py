@@ -2,7 +2,17 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 
+from .forms import PostForm
 from .models import Post
+
+#글등록 (PostForm 사용)
+def post_new(request):
+    if request.method == 'POST':
+        pass
+    else:
+        form = PostForm()
+
+    return render(request, 'blog/post_edit.html', {'form': form})
 
 # 글상세
 def post_detail(request, pk):

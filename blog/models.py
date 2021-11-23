@@ -34,6 +34,10 @@ class Post(models.Model):
         self.published_date = timezone.now()
         self.save()
 
+    # approved_comment 가 True 인 Comment만 반환
+    def approved_comments(self):
+        return self.comments.filter(approved_comment=True)
+
 # 댓글(Comment) 모델 클래스 선언
 class Comment(models.Model):
     # Comment가 참조하는 Post id 저장되는 필드
@@ -55,4 +59,4 @@ class Comment(models.Model):
     # 댓글 내용(text)을 반환하도록 재정의 메서드
     def __str__(self):
         return f'{self.text} ({self.pk})'
-
+    

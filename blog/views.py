@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
+from django.views import View
 
 from .forms import PostForm, PostModelForm, CommentModelForm
 from .models import Post, Comment
@@ -62,6 +63,26 @@ def post_edit(request, pk):
     else:
         form = PostModelForm(instance=post)
     return render(request, 'blog/post_edit.html', {'form':form})
+
+# 글등록처리를 Class 기반으로 작성
+class MyFormView(View):
+    form_class = PostModelForm
+    template_name = 'blog/post_edit.html'
+
+    def get(self, request):
+        form = self.form_class
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.published_date = timezone.now()
+            post.save()
+            return HttpResponseRedirect('/post/%i' % post.pk)
+
+        return render(request, self.template_name, {'form': form})
 
 # 글등록 (PostForm 사용)
 @login_required

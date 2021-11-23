@@ -1,5 +1,6 @@
+from django.contrib.auth.models import User
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 
 from .forms import PostForm
@@ -8,7 +9,17 @@ from .models import Post
 #글등록 (PostForm 사용)
 def post_new(request):
     if request.method == 'POST':
-        pass
+        form = PostForm(request.POST)
+        # Form의 데이터가 clean 한 상태인지 체크
+        if form.is_valid():
+            print(form.cleaned_data)
+            post = Post.objects.create(
+                author=User.objects.get(username=request.user),
+                title=form.cleaned_data['title'],
+                text=form.cleaned_data['text'],
+                published_date=timezone.now()
+            )
+            return redirect('post_detail', pk=post.pk)
     else:
         form = PostForm()
 

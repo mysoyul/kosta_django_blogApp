@@ -1,16 +1,16 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
-<script>
-    function post_remove() {
-        //"{% url 'post_remove' pk=post.pk %}"
-        var result = confirm("Post를 삭제하시겠습니까?");
-        if(result){
-            var url = "{% url 'post_remove' pk=post.pk %}";
-            document.location.href = url;
-        }//if
-    }
-</script>
+    <script>
+        function post_remove() {
+            //"{% url 'post_remove' pk=post.pk %}"
+            var result = confirm("Post를 삭제하시겠습니까?");
+            if(result){
+                var url = "{% url 'post_remove' pk=post.pk %}";
+                document.location.href = url;
+            }//if
+        }
+    </script>
     <div class="post">
         {% if post.published_date %}
             <div class="date">
@@ -30,4 +30,16 @@
         <h1>{{ post.title }}</h1>
         <p>{{ post.text|linebreaksbr }}</p>
     </div>
+
+    <hr>
+    {% for comment in post.comments.all %}
+        <div class="comment">
+            <div class="date">{{ comment.created_date }}</div>
+            <strong>{{ comment.author }}</strong>
+            <p>{{ comment.text|linebreaks }}</p>
+        </div>
+    {% empty %}
+        <p>No comments here yet :(</p>
+    {% endfor %}
+
 {% endblock %}

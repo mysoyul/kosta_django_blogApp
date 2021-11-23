@@ -3,10 +3,19 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 
-from .forms import PostForm
+from .forms import PostForm, PostModelForm
 from .models import Post
 
-#글등록 (PostForm 사용)
+# 글수정(PostModelForm사용)
+def post_edit(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == 'POST':
+        pass
+    else:
+        form = PostModelForm(instance=post)
+    return render(request, 'blog/post_edit.html', {'form':form})
+
+# 글등록 (PostForm 사용)
 def post_new(request):
     if request.method == 'POST':
         form = PostForm(request.POST)

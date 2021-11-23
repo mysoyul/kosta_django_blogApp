@@ -1,11 +1,17 @@
 from django.db import models
 from django.utils import timezone
+from django import forms
+
+def min_length_2_validator(value):
+    if len(value) < 2 :
+        # Exception 강제로 발생시킬때는 raise 구문사용
+        raise forms.ValidationError('title은 2글자 이상 입력해 주세요')
 
 class Post(models.Model):
     #작성자
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     #글제목
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, validators=[min_length_2_validator])
     #글내용
     text = models.TextField()
 

@@ -119,3 +119,38 @@ None
 (1, {'blog.Post': 1})
 >>> Post.objects.all()
 <QuerySet [<Post: 장고프레임워크 (1) >, <Post: Django 역사 (2) >, <Post: 파이썬 (3) >]>
+--------------Comment 추가--------------
+(venv) C:\mypython>python manage.py shell
+Python 3.9.7 (tags/v3.9.7:1016ef3, Aug 30 2021, 20:19:38) [MSC v.1929 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from blog.models import Post,Comment
+>>> posts = Post.objects.all()
+>>> type(posts)
+<class 'django.db.models.query.QuerySet'>
+>>> for post in posts:
+...     print(post.id,post.pk,post.title)
+...
+1 1 장고프레임워크
+2 2 Django 역사
+3 3 파이썬
+>>> Comment.objects.all()
+<QuerySet [<Comment: 장고 프레임워크 룰이 많아요 (1)>]>
+>>> comments = Comment.objects.all()
+>>> for com in comments:
+...     print(com.text, com.author)
+...
+장고 프레임워크 룰이 많아요 둘리
+>>> post1 = Post.objects.get(id=1)
+>>> post1
+<Post: 장고프레임워크 (1) >
+>>> post1.comments.all()
+<QuerySet [<Comment: 장고 프레임워크 룰이 많아요 (1)>]>
+>>> for comm in post1.comments.all():
+...     print(comm.id, comm.author, comm.text, comm.post)
+...
+1 둘리 장고 프레임워크 룰이 많아요 장고프레임워크 (1)
+>>> for comm in post1.comments.all():
+...     print(comm.id, comm.author, comm.text, comm.post.id)
+...
+1 둘리 장고 프레임워크 룰이 많아요 1

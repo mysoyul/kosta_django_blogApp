@@ -36,16 +36,23 @@ class Post(models.Model):
 
 # 댓글(Comment) 모델 클래스 선언
 class Comment(models.Model):
-    post = models.ForeignKey('blog.Post',on_delete=models.CASCADE,related_name='comments')
+    # Comment가 참조하는 Post id 저장되는 필드
+    post = models.ForeignKey('blog.Post', on_delete=models.CASCADE, related_name='comments')
+    # 작성자
     author = models.CharField(max_length=200)
+    # 내용
     text = models.TextField()
+    # 작성일자
     created_date = models.DateTimeField(default=timezone.now)
+    # 승인여부
     approved_comment = models.BooleanField(default=False)
 
+    # 승인여부를 True로 변경해서 댓글을 승인하는 메서드
     def approve(self):
         self.approved_comment = True
         self.save()
-
+        
+    # 댓글 내용(text)을 반환하도록 재정의 메서드
     def __str__(self):
-        return self.text
+        return f'{self.text} ({self.pk})'
 

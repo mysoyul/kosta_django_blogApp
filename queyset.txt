@@ -154,3 +154,20 @@ Type "help", "copyright", "credits" or "license" for more information.
 ...     print(comm.id, comm.author, comm.text, comm.post.id)
 ...
 1 둘리 장고 프레임워크 룰이 많아요 1
+>>> post1 = Post.objects.get(id=1)
+>>> post1.comments.count()
+2
+>>> for comm in post1.comments.all():
+...     print(comm.pk, comm.approved_comment)
+...
+1 False
+2 True
+
+>>> for comm in post1.comments.all():
+...     comm.approve()
+
+>>> for com in Comment.objects.all():
+...     print(com.pk, com.approved_comment)
+...
+1 True
+2 True

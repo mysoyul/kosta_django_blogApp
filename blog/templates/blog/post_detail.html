@@ -1,6 +1,16 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
+<script>
+    function post_remove() {
+        //"{% url 'post_remove' pk=post.pk %}"
+        var result = confirm("Post를 삭제하시겠습니까?");
+        if(result){
+            var url = "{% url 'post_remove' pk=post.pk %}";
+            document.location.href = url;
+        }//if
+    }
+</script>
     <div class="post">
         {% if post.published_date %}
             <div class="date">
@@ -9,6 +19,9 @@
         {% endif %}
         <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}">
             <span class="glyphicon glyphicon-pencil"></span>
+        </a>
+        <a class="btn btn-default" href="#" onclick="post_remove()">
+            <span class="glyphicon glyphicon-remove"></span>
         </a>
         <h1>{{ post.title }}</h1>
         <p>{{ post.text|linebreaksbr }}</p>

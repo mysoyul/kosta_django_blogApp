@@ -6,12 +6,20 @@ from django.utils import timezone
 from .forms import PostForm, PostModelForm
 from .models import Post
 
+# 글삭제
+def post_remove(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    post.delete()
+    return redirect('post_list')
+
 # 글수정(PostModelForm사용)
 def post_edit(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if request.method == 'POST':
         form = PostModelForm(request.POST, instance=post)
         if form.is_valid():
+            # post = form.save(commit=True)
+
             post = form.save(commit=False)
             post.author = request.user
             post.published_date = timezone.now()
